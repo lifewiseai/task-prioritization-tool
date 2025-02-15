@@ -15,10 +15,13 @@
         .delete-btn { background: #dc3545; color: white; right: 40px; }
         .instruction { font-size: 13px; color: #555; margin-bottom: 10px; text-align: center; }
         .intro { font-size: 15px; text-align: center; margin-bottom: 15px; color: #444; }
-        .submit-btn, .add-btn { padding: 12px 15px; background: #28a745; color: white; border: none; cursor: pointer; font-size: 14px; width: 100%; border-radius: 5px; }
+        .submit-btn, .add-btn, .export-btn { padding: 12px 15px; color: white; border: none; cursor: pointer; font-size: 14px; width: 100%; border-radius: 5px; margin-top: 10px; }
+        .submit-btn { background: #28a745; }
         .submit-btn:hover { background: #218838; }
         .add-btn { background: #007bff; }
         .add-btn:hover { background: #0056b3; }
+        .export-btn { background: #6c757d; }
+        .export-btn:hover { background: #5a6268; }
         .result { flex: 1; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow-y: auto; max-height: 550px; }
         .result h2 { font-size: 16px; text-align: center; }
         .task-list { font-size: 13px; line-height: 1.4; }
@@ -45,6 +48,8 @@
             <button class="add-btn" onclick="addTask()">+ Add Task</button>
             <form id="taskInputs"></form>
             <button class="submit-btn" onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
+            <button class="export-btn" onclick="exportCSV()">Export to CSV</button>
+            <button class="export-btn" onclick="exportPDF()">Export to PDF</button>
         </div>
 
         <!-- Prioritized Task List & Calendar View -->
@@ -81,12 +86,6 @@
             form.appendChild(taskDiv);
         }
 
-        function editTask(index) {
-            const taskName = document.getElementById(`task${index}`);
-            taskName.removeAttribute("readonly");
-            taskName.focus();
-        }
-
         function deleteTask(index) {
             document.getElementById(`taskContainer${index}`).remove();
         }
@@ -102,6 +101,7 @@
                 let dueDate = document.getElementById(`due${i}`).value;
 
                 tasks.push({ name, dueDate });
+                scheduleNotification(name, dueDate);
             }
 
             document.getElementById("result").style.display = "block";
@@ -114,6 +114,19 @@
                 taskList.innerHTML += `<li><strong>${index + 1}. ${task.name}</strong> (Due: ${task.dueDate})</li>`;
                 calendarList.innerHTML += `<li>${task.dueDate} - ${task.name}</li>`;
             });
+        }
+
+        function exportCSV() {
+            let csv = "Task Name,Due Date\\n";
+            document.querySelectorAll("#taskList li").forEach(task => {
+                csv += task.textContent.replace(/[\n\r]/g, "") + "\\n";
+            });
+
+            let blob = new Blob([csv], { type: "text/csv" });
+            let link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "task_list.csv";
+            link.click();
         }
     </script>
 
