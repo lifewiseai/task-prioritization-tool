@@ -23,6 +23,8 @@
         .result { flex: 1; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow-y: auto; max-height: 550px; }
         .result h2 { font-size: 16px; text-align: center; }
         .task-list { font-size: 13px; line-height: 1.4; }
+        .instruction { font-size: 13px; color: #555; margin-bottom: 10px; text-align: center; }
+        .intro { font-size: 15px; text-align: center; margin-bottom: 15px; color: #444; }
     </style>
 </head>
 <body>
@@ -30,6 +32,14 @@
     <div class="container">
         <div class="task-section">
             <h2>Task Prioritization & Time Management</h2>
+
+            <p class="intro">
+                This tool helps you **prioritize tasks** based on importance and urgency, then schedules them efficiently. 
+                Use it to **focus on high-impact work**, avoid distractions, and improve productivity.
+            </p>
+
+            <p class="instruction"><strong>How to use:</strong> Enter tasks, answer the questions, and click "Prioritize & Schedule" to get your ranked list. 
+            To add multiple tasks, click the **"Add Task"** button.</p>
 
             <button class="add-btn" onclick="addTask()">+ Add Task</button>
             <form id="taskInputs"></form>
@@ -85,6 +95,20 @@
                         <option value="1">No</option>
                     </select>
                 </label>
+
+                <label>Only you can do it?
+                    <select id="ownership${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+
+                <label>Can be automated?
+                    <select id="automation${index}">
+                        <option value="-1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </label>
             `;
             form.appendChild(taskDiv);
         }
@@ -96,34 +120,16 @@
         function prioritizeTasks(event) {
             event.preventDefault();
 
-            let tasks = [];
-            let form = document.getElementById("taskInputs").children;
-
-            for (let i = 0; i < form.length; i++) {
-                let name = document.getElementById(`task${i}`).value;
-                let dueDate = document.getElementById(`due${i}`).value;
-                tasks.push({ name, dueDate });
-            }
-
-            document.getElementById("result").style.display = "block";
             let taskList = document.getElementById("taskList");
             taskList.innerHTML = "";
-            tasks.forEach((task, index) => {
-                taskList.innerHTML += `<li><strong>${index + 1}. ${task.name}</strong> (Due: ${task.dueDate})</li>`;
-            });
-        }
+            document.getElementById("result").style.display = "block";
 
-        function exportCSV() {
-            let csv = "Task Name,Due Date\\n";
-            document.querySelectorAll("#taskList li").forEach(task => {
-                csv += task.textContent.replace(/[\n\r]/g, "") + "\\n";
-            });
+            document.querySelectorAll(".task-container").forEach((task, index) => {
+                let name = task.querySelector(".task-input").value;
+                let dueDate = task.querySelector("input[type='datetime-local']").value;
 
-            let blob = new Blob([csv], { type: "text/csv" });
-            let link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "task_list.csv";
-            link.click();
+                taskList.innerHTML += `<li><strong>${index + 1}. ${name}</strong> (Due: ${dueDate})</li>`;
+            });
         }
     </script>
 
