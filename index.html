@@ -3,31 +3,44 @@
 <head>
     <title>Task Prioritization & Time Management</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h2 { color: #333; }
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; }
+        h2 { color: #333; text-align: center; }
+        .container { max-width: 800px; margin: 20px auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
         .task-container { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9; padding: 15px; }
-        .task-input { width: 100%; padding: 5px; margin-top: 5px; }
-        .submit-btn { padding: 10px 15px; background: #007bff; color: white; border: none; cursor: pointer; margin-top: 10px; }
+        .task-input, select { width: 80%; padding: 5px; margin-top: 5px; }
+        .submit-btn { padding: 10px 15px; background: #007bff; color: white; border: none; cursor: pointer; margin-top: 10px; display: block; width: 100%; }
         .submit-btn:hover { background: #0056b3; }
-        .result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; }
-        select, input { width: 100%; padding: 5px; margin-top: 5px; }
+        .result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; background: #ffffff; }
+        select, input { padding: 5px; margin-top: 5px; }
         .task-list li { margin-bottom: 5px; font-size: 16px; }
+        .instruction { font-size: 14px; color: #555; margin-bottom: 10px; text-align: center; }
+        .intro { font-size: 16px; text-align: center; margin-bottom: 20px; color: #444; }
+        button { display: block; margin: 10px auto; }
     </style>
 </head>
 <body>
 
-    <h2>Task Prioritization & Time Management</h2>
-    <p>Enter your tasks and answer the prioritization questions to generate a ranked, scheduled task list.</p>
+    <div class="container">
+        <h2>Task Prioritization & Time Management</h2>
+        
+        <p class="intro">
+            This tool helps you **prioritize tasks** based on importance and urgency, then schedules them efficiently. 
+            Use it to **focus on high-impact work**, avoid distractions, and improve productivity.
+        </p>
 
-    <div id="taskForm">
-        <button onclick="addTask()">+ Add Task</button>
-        <form id="taskInputs"></form>
-        <button class="submit-btn" onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
-    </div>
+        <p class="instruction"><strong>How to use:</strong> Enter tasks, answer the questions, and click "Prioritize & Schedule" to get your ranked list. 
+        To add multiple tasks, click the **"Add Task"** button.</p>
 
-    <div id="result" class="result" style="display: none;">
-        <h2>Prioritized Task List</h2>
-        <ol id="taskList" class="task-list"></ol>
+        <div id="taskForm">
+            <button onclick="addTask()">+ Add Task</button>
+            <form id="taskInputs"></form>
+            <button class="submit-btn" onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
+        </div>
+
+        <div id="result" class="result" style="display: none;">
+            <h2>Prioritized Task List</h2>
+            <ol id="taskList" class="task-list"></ol>
+        </div>
     </div>
 
     <script>
