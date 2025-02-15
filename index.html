@@ -13,8 +13,6 @@
         .edit-btn, .delete-btn { position: absolute; top: 5px; right: 5px; font-size: 12px; border: none; cursor: pointer; padding: 4px; }
         .edit-btn { background: #ffc107; color: black; }
         .delete-btn { background: #dc3545; color: white; right: 40px; }
-        .instruction { font-size: 13px; color: #555; margin-bottom: 10px; text-align: center; }
-        .intro { font-size: 15px; text-align: center; margin-bottom: 15px; color: #444; }
         .submit-btn, .add-btn, .export-btn { padding: 12px 15px; color: white; border: none; cursor: pointer; font-size: 14px; width: 100%; border-radius: 5px; margin-top: 10px; }
         .submit-btn { background: #28a745; }
         .submit-btn:hover { background: #218838; }
@@ -25,25 +23,13 @@
         .result { flex: 1; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow-y: auto; max-height: 550px; }
         .result h2 { font-size: 16px; text-align: center; }
         .task-list { font-size: 13px; line-height: 1.4; }
-        ol { padding-left: 20px; }
-        .task-list li { margin-bottom: 5px; }
-        .calendar { width: 100%; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Task Entry Section -->
         <div class="task-section">
             <h2>Task Prioritization & Time Management</h2>
-
-            <p class="intro">
-                This tool helps you **prioritize tasks** based on importance and urgency, then schedules them efficiently. 
-                Use it to **focus on high-impact work**, avoid distractions, and improve productivity.
-            </p>
-
-            <p class="instruction"><strong>How to use:</strong> Enter tasks, answer the questions, and click "Prioritize & Schedule" to get your ranked list. 
-            To add multiple tasks, click the **"Add Task"** button.</p>
 
             <button class="add-btn" onclick="addTask()">+ Add Task</button>
             <form id="taskInputs"></form>
@@ -52,14 +38,9 @@
             <button class="export-btn" onclick="exportPDF()">Export to PDF</button>
         </div>
 
-        <!-- Prioritized Task List & Calendar View -->
         <div class="result" id="result" style="display: none;">
             <h2>Prioritized Task List</h2>
             <ol id="taskList" class="task-list"></ol>
-            <div class="calendar" id="calendarView">
-                <h2>Calendar View</h2>
-                <ul id="calendarList"></ul>
-            </div>
         </div>
     </div>
 
@@ -82,6 +63,28 @@
                 <label>Due Date & Time:
                     <input type="datetime-local" id="due${index}">
                 </label>
+
+                <label>Aligns with goal?
+                    <select id="goal${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+
+                <label>Consequence of not doing?
+                    <select id="consequence${index}">
+                        <option value="3">High</option>
+                        <option value="2">Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                </label>
+
+                <label>Best use of your time?
+                    <select id="time${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
             `;
             form.appendChild(taskDiv);
         }
@@ -99,20 +102,15 @@
             for (let i = 0; i < form.length; i++) {
                 let name = document.getElementById(`task${i}`).value;
                 let dueDate = document.getElementById(`due${i}`).value;
-
                 tasks.push({ name, dueDate });
                 scheduleNotification(name, dueDate);
             }
 
             document.getElementById("result").style.display = "block";
             let taskList = document.getElementById("taskList");
-            let calendarList = document.getElementById("calendarList");
             taskList.innerHTML = "";
-            calendarList.innerHTML = "";
-
             tasks.forEach((task, index) => {
                 taskList.innerHTML += `<li><strong>${index + 1}. ${task.name}</strong> (Due: ${task.dueDate})</li>`;
-                calendarList.innerHTML += `<li>${task.dueDate} - ${task.name}</li>`;
             });
         }
 
