@@ -1,125 +1,219 @@
-function addTask() {
-    const form = document.getElementById("taskInputs");
-    const index = form.children.length;
-
-    const taskDiv = document.createElement("div");
-    taskDiv.classList.add("task-container");
-    taskDiv.setAttribute("id", `taskContainer${index}`);
-
-    taskDiv.innerHTML = `
-        <h3>Task ${index + 1}</h3>
-        <label>Task Name:</label>
-        <input type="text" class="task-input" id="task${index}" required>
-        
-        <label>Aligns with goal?
-            <select id="goal${index}">
-                <option value="2">Yes</option>
-                <option value="1">No</option>
-            </select>
-        </label>
-
-        <label>Consequence of not doing?
-            <select id="consequence${index}">
-                <option value="3">High</option>
-                <option value="2">Medium</option>
-                <option value="1">Low</option>
-            </select>
-        </label>
-
-        <label>Best use of your time?
-            <select id="time${index}">
-                <option value="2">Yes</option>
-                <option value="1">No</option>
-            </select>
-        </label>
-        
-        <label>Only you can do it?
-            <select id="ownership${index}">
-                <option value="2">Yes</option>
-                <option value="1">No</option>
-            </select>
-        </label>
-        
-        <label>Can be automated?
-            <select id="automation${index}">
-                <option value="-1">Yes</option>
-                <option value="0">No</option>
-            </select>
-        </label>
-        
-        <label>Due Date & Time:
-            <input type="datetime-local" id="due${index}">
-        </label>
-        
-        <label>How long will this task take? (Minutes)
-            <input type="number" id="duration${index}" min="1">
-        </label>
-        
-        <label>Best time to complete?
-            <select id="bestTime${index}">
-                <option value="Morning">Morning</option>
-                <option value="Afternoon">Afternoon</option>
-                <option value="Evening">Evening</option>
-            </select>
-        </label>
-    `;
-    form.appendChild(taskDiv);
-}
-
-function prioritizeTasks(event) {
-    event.preventDefault();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Prioritization & Scheduling</title>
     
-    let tasks = [];
-    let taskList = document.getElementById("taskList");
-    taskList.innerHTML = "";
-    document.getElementById("result").style.display = "block";
-
-    document.querySelectorAll(".task-container").forEach((task, index) => {
-        let name = task.querySelector(".task-input").value.trim();
-        if (!name) return; // Prevent adding empty tasks
-
-        let dueDate = task.querySelector(`#due${index}`).value;
-        let goal = parseInt(task.querySelector(`#goal${index}`).value);
-        let consequence = parseInt(task.querySelector(`#consequence${index}`).value);
-        let time = parseInt(task.querySelector(`#time${index}`).value);
-        let ownership = parseInt(task.querySelector(`#ownership${index}`).value);
-        let automation = parseInt(task.querySelector(`#automation${index}`).value);
-        let duration = parseInt(task.querySelector(`#duration${index}`).value) || 0;
-        let bestTime = task.querySelector(`#bestTime${index}`).value;
-
-        // Calculate priority score
-        let priorityScore = goal + consequence + time + ownership + automation;
-
-        tasks.push({ 
-            name, dueDate, priorityScore, duration, bestTime, index, 
-            automation, ownership 
-        });
-    });
-
-    // Sort tasks by priority score (Descending order)
-    tasks.sort((a, b) => b.priorityScore - a.priorityScore);
-
-    // Display prioritized tasks
-    tasks.forEach((task, index) => {
-        let taskItem = document.createElement("li");
-        taskItem.innerHTML = `<strong>${index + 1}. ${task.name}</strong> (Priority: ${task.priorityScore})
-            <br>
-            <label>Due Date & Time:
-                <input type="datetime-local" id="dueTask${task.index}" value="${task.dueDate}">
-            </label>
-            <br>
-            <label>Best time to complete: ${task.bestTime}</label>
-            <br>
-            <label>Estimated Duration: ${task.duration} minutes</label>`;
-
-        // Add automation or delegation warning
-        if (task.automation === -1) {
-            taskItem.innerHTML += `<br><span style="color: red;">⚠️ Consider automating this task!</span>`;
+    <style>
+        /* General Page Styling */
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f4f4f4; 
+            display: flex; 
+            justify-content: center;
         }
-        if (task.ownership === 1) {
-            taskItem.innerHTML += `<br><span style="color: orange;">🔄 Consider delegating this task.</span>`;
+        .container { 
+            max-width: 1100px; 
+            display: flex; 
+            gap: 20px; 
+        }
+        .task-section { 
+            flex: 2; 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        .result { 
+            flex: 1; 
+            background: white; 
+            padding: 10px; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            overflow-y: auto; 
+            max-height: 550px; 
+            width: 40%; 
         }
 
-        taskList.appendChild(taskItem);
-    });
-}
+        /* Task Input Section */
+        .task-container {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+            margin-bottom: 15px;
+        }
+
+        /* Task List Styling */
+        .task-list {
+            font-size: 14px; 
+            line-height: 1.5;
+            list-style: none;
+            padding: 0;
+        }
+        .task-list li {
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            background: #eef5ff;
+            border-left: 5px solid #007bff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        /* Priority Score Styling */
+        .task-list li strong {
+            color: #0056b3;
+            font-size: 16px;
+        }
+
+        /* Automation & Delegation Warnings */
+        .task-list li span {
+            font-size: 13px;
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+        }
+        .task-list li span[style="color: red;"] {
+            color: red;
+        }
+        .task-list li span[style="color: orange;"] {
+            color: orange;
+        }
+
+        /* Button Styling */
+        .add-btn, button {
+            background: #007bff;
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: 0.3s ease;
+        }
+        .add-btn:hover, button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="task-section">
+            <h2>Task Prioritization & Scheduling</h2>
+            <p><strong>Introduction:</strong> This tool helps you **prioritize tasks** based on importance and urgency, then schedules them efficiently.</p>
+            <button class="add-btn" onclick="addTask()">+ Add Task</button>
+            <form id="taskInputs"></form>
+            <button onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
+        </div>
+        
+        <div class="result" id="result" style="display: none;">
+            <h2>Prioritized Task List & Scheduling</h2>
+            <ol id="taskList" class="task-list"></ol>
+        </div>
+    </div>
+
+    <script>
+        function addTask() {
+            const form = document.getElementById("taskInputs");
+            const index = form.children.length;
+
+            const taskDiv = document.createElement("div");
+            taskDiv.classList.add("task-container");
+            taskDiv.setAttribute("id", `taskContainer${index}`);
+
+            taskDiv.innerHTML = `
+                <h3>Task ${index + 1}</h3>
+                <label>Task Name:</label>
+                <input type="text" class="task-input" id="task${index}" required>
+                
+                <label>Aligns with goal?
+                    <select id="goal${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+
+                <label>Consequence of not doing?
+                    <select id="consequence${index}">
+                        <option value="3">High</option>
+                        <option value="2">Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                </label>
+
+                <label>Best use of your time?
+                    <select id="time${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+                
+                <label>Only you can do it?
+                    <select id="ownership${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+                
+                <label>Can be automated?
+                    <select id="automation${index}">
+                        <option value="-1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </label>
+                
+                <label>Due Date & Time:
+                    <input type="datetime-local" id="due${index}">
+                </label>
+            `;
+            form.appendChild(taskDiv);
+        }
+
+        function prioritizeTasks(event) {
+            event.preventDefault();
+            let tasks = [];
+            let taskList = document.getElementById("taskList");
+            taskList.innerHTML = "";
+            document.getElementById("result").style.display = "block";
+
+            document.querySelectorAll(".task-container").forEach((task, index) => {
+                let name = task.querySelector(".task-input").value.trim();
+                if (!name) return;
+
+                let dueDate = task.querySelector(`#due${index}`).value;
+                let goal = parseInt(task.querySelector(`#goal${index}`).value);
+                let consequence = parseInt(task.querySelector(`#consequence${index}`).value);
+                let time = parseInt(task.querySelector(`#time${index}`).value);
+                let ownership = parseInt(task.querySelector(`#ownership${index}`).value);
+                let automation = parseInt(task.querySelector(`#automation${index}`).value);
+
+                let priorityScore = goal + consequence + time + ownership + automation;
+
+                tasks.push({ name, dueDate, priorityScore, index, automation, ownership });
+            });
+
+            tasks.sort((a, b) => b.priorityScore - a.priorityScore);
+
+            tasks.forEach((task, index) => {
+                let taskItem = document.createElement("li");
+                taskItem.innerHTML = `<strong>${index + 1}. ${task.name}</strong> (Priority: ${task.priorityScore})`;
+
+                if (task.automation === -1) {
+                    taskItem.innerHTML += `<br><span style="color: red;">⚠️ Consider automating this task!</span>`;
+                }
+                if (task.ownership === 1) {
+                    taskItem.innerHTML += `<br><span style="color: orange;">🔄 Consider delegating this task.</span>`;
+                }
+
+                taskList.appendChild(taskItem);
+            });
+        }
+    </script>
+
+</body>
+</html>
