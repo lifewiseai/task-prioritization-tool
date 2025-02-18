@@ -223,6 +223,23 @@
             });
         }
     </script>
+function toggleTask(index) {
+    const details = document.getElementById(`taskDetails${index}`);
+    const toggleIcon = document.querySelector(`#taskContainer${index} .toggle-icon`);
+    
+    if (details.style.display === "none") {
+        details.style.display = "block";
+        toggleIcon.textContent = "[-]";
+    } else {
+        details.style.display = "none";
+        toggleIcon.textContent = "[+]";
+    }
+}
 
+function updateTaskTitle(index) {
+    const taskName = document.getElementById(`task${index}`).value.trim();
+    const taskTitle = document.getElementById(`taskTitle${index}`);
+    taskTitle.textContent = taskName ? taskName : `Task ${index + 1}`;
+}
 </body>
 </html>
