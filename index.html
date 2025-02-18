@@ -1,140 +1,125 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Task Prioritization & Scheduling</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; display: flex; justify-content: center; }
-        .container { max-width: 1100px; display: flex; gap: 20px; }
-        .task-section { flex: 2; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        .result { flex: 1; background: white; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); overflow-y: auto; max-height: 550px; width: 40%; }
-        .task-list { font-size: 13px; line-height: 1.4; list-style: none; padding: 0; }
-        .task-list li { margin-bottom: 10px; padding: 8px; border: 1px solid #ccc; border-radius: 5px; background: #f9f9f9; }
-        .add-btn { background: #007bff; color: white; padding: 12px 15px; border: none; cursor: pointer; font-size: 14px; border-radius: 5px; margin-bottom: 10px; }
-        .add-btn:hover { background: #0056b3; }
-    </style>
-</head>
-<body>
+function addTask() {
+    const form = document.getElementById("taskInputs");
+    const index = form.children.length;
 
-    <div class="container">
-        <div class="task-section">
-            <h2>Task Prioritization & Scheduling</h2>
-            <p><strong>Introduction:</strong> This tool helps you **prioritize tasks** based on importance and urgency, then schedules them efficiently. Use it to **focus on high-impact work**, avoid distractions, and improve productivity.</p>
-            <p><strong>How to use:</strong> Enter tasks, answer the prioritization questions, and click "Prioritize & Schedule" to get your ranked list. Then answer time management questions and set due dates inline.</p>
-            <button class="add-btn" onclick="addTask()">+ Add Task</button>
-            <form id="taskInputs"></form>
-            <button onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
-        </div>
+    const taskDiv = document.createElement("div");
+    taskDiv.classList.add("task-container");
+    taskDiv.setAttribute("id", `taskContainer${index}`);
+
+    taskDiv.innerHTML = `
+        <h3>Task ${index + 1}</h3>
+        <label>Task Name:</label>
+        <input type="text" class="task-input" id="task${index}" required>
         
-        <div class="result" id="result" style="display: none;">
-            <h2>Prioritized Task List & Scheduling</h2>
-            <ol id="taskList" class="task-list"></ol>
-        </div>
-    </div>
+        <label>Aligns with goal?
+            <select id="goal${index}">
+                <option value="2">Yes</option>
+                <option value="1">No</option>
+            </select>
+        </label>
 
-    <script>
-        function addTask() {
-            const form = document.getElementById("taskInputs");
-            const index = form.children.length;
+        <label>Consequence of not doing?
+            <select id="consequence${index}">
+                <option value="3">High</option>
+                <option value="2">Medium</option>
+                <option value="1">Low</option>
+            </select>
+        </label>
 
-            const taskDiv = document.createElement("div");
-            taskDiv.classList.add("task-container");
-            taskDiv.setAttribute("id", `taskContainer${index}`);
+        <label>Best use of your time?
+            <select id="time${index}">
+                <option value="2">Yes</option>
+                <option value="1">No</option>
+            </select>
+        </label>
+        
+        <label>Only you can do it?
+            <select id="ownership${index}">
+                <option value="2">Yes</option>
+                <option value="1">No</option>
+            </select>
+        </label>
+        
+        <label>Can be automated?
+            <select id="automation${index}">
+                <option value="-1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </label>
+        
+        <label>Due Date & Time:
+            <input type="datetime-local" id="due${index}">
+        </label>
+        
+        <label>How long will this task take? (Minutes)
+            <input type="number" id="duration${index}" min="1">
+        </label>
+        
+        <label>Best time to complete?
+            <select id="bestTime${index}">
+                <option value="Morning">Morning</option>
+                <option value="Afternoon">Afternoon</option>
+                <option value="Evening">Evening</option>
+            </select>
+        </label>
+    `;
+    form.appendChild(taskDiv);
+}
 
-            taskDiv.innerHTML = `
-                <h3>Task ${index + 1}</h3>
-                <label>Task Name:</label>
-                <input type="text" class="task-input" id="task${index}" required>
-                
-                <label>Aligns with goal?
-                    <select id="goal${index}">
-                        <option value="2">Yes</option>
-                        <option value="1">No</option>
-                    </select>
-                </label>
+function prioritizeTasks(event) {
+    event.preventDefault();
+    
+    let tasks = [];
+    let taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+    document.getElementById("result").style.display = "block";
 
-                <label>Consequence of not doing?
-                    <select id="consequence${index}">
-                        <option value="3">High</option>
-                        <option value="2">Medium</option>
-                        <option value="1">Low</option>
-                    </select>
-                </label>
+    document.querySelectorAll(".task-container").forEach((task, index) => {
+        let name = task.querySelector(".task-input").value.trim();
+        if (!name) return; // Prevent adding empty tasks
 
-                <label>Best use of your time?
-                    <select id="time${index}">
-                        <option value="2">Yes</option>
-                        <option value="1">No</option>
-                    </select>
-                </label>
-                
-                <label>Only you can do it?
-                    <select id="ownership${index}">
-                        <option value="2">Yes</option>
-                        <option value="1">No</option>
-                    </select>
-                </label>
-                
-                <label>Can be automated?
-                    <select id="automation${index}">
-                        <option value="-1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </label>
-                
-                <label>Due Date & Time:
-                    <input type="datetime-local" id="due${index}">
-                </label>
-            `;
-            form.appendChild(taskDiv);
+        let dueDate = task.querySelector(`#due${index}`).value;
+        let goal = parseInt(task.querySelector(`#goal${index}`).value);
+        let consequence = parseInt(task.querySelector(`#consequence${index}`).value);
+        let time = parseInt(task.querySelector(`#time${index}`).value);
+        let ownership = parseInt(task.querySelector(`#ownership${index}`).value);
+        let automation = parseInt(task.querySelector(`#automation${index}`).value);
+        let duration = parseInt(task.querySelector(`#duration${index}`).value) || 0;
+        let bestTime = task.querySelector(`#bestTime${index}`).value;
+
+        // Calculate priority score
+        let priorityScore = goal + consequence + time + ownership + automation;
+
+        tasks.push({ 
+            name, dueDate, priorityScore, duration, bestTime, index, 
+            automation, ownership 
+        });
+    });
+
+    // Sort tasks by priority score (Descending order)
+    tasks.sort((a, b) => b.priorityScore - a.priorityScore);
+
+    // Display prioritized tasks
+    tasks.forEach((task, index) => {
+        let taskItem = document.createElement("li");
+        taskItem.innerHTML = `<strong>${index + 1}. ${task.name}</strong> (Priority: ${task.priorityScore})
+            <br>
+            <label>Due Date & Time:
+                <input type="datetime-local" id="dueTask${task.index}" value="${task.dueDate}">
+            </label>
+            <br>
+            <label>Best time to complete: ${task.bestTime}</label>
+            <br>
+            <label>Estimated Duration: ${task.duration} minutes</label>`;
+
+        // Add automation or delegation warning
+        if (task.automation === -1) {
+            taskItem.innerHTML += `<br><span style="color: red;">⚠️ Consider automating this task!</span>`;
+        }
+        if (task.ownership === 1) {
+            taskItem.innerHTML += `<br><span style="color: orange;">🔄 Consider delegating this task.</span>`;
         }
 
-        function prioritizeTasks(event) {
-            event.preventDefault();
-            let taskList = document.getElementById("taskList");
-            taskList.innerHTML = "";
-            document.getElementById("result").style.display = "block";
-
-            document.querySelectorAll(".task-container").forEach((task, index) => {
-                let name = task.querySelector(".task-input").value;
-                let dueDate = task.querySelector("input[type='datetime-local']").value;
-                
-                let taskItem = document.createElement("li");
-                taskItem.innerHTML = `<strong>${index + 1}. ${name}</strong>
-                    <br>
-                    <label>Due Date & Time:
-                        <input type="datetime-local" id="dueTask${index}" value="${dueDate}">
-                    </label>
-                    <br>
-                    <label>How long will this task take? (Minutes)
-                        <input type="number" id="duration${index}" min="1">
-                    </label>
-                    
-                    <label>Best time to complete?
-                        <select id="bestTime${index}">
-                            <option value="Morning">Morning</option>
-                            <option value="Afternoon">Afternoon</option>
-                            <option value="Evening">Evening</option>
-                        </select>
-                    </label>
-                    
-                    <label>Can be grouped with others?
-                        <select id="groupable${index}">
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </label>
-                    
-                    <label>Requires deep focus?
-                        <select id="focus${index}">
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
-                    </label>`;
-                
-                taskList.appendChild(taskItem);
-            });
-        }
-    </script>
-
-</body>
-</html>
+        taskList.appendChild(taskItem);
+    });
+}
