@@ -44,8 +44,26 @@
                 <label>Task Name:</label>
                 <input type="text" class="task-input" id="task${index}" required>
                 
-                <label>Due Date & Time:
-                    <input type="datetime-local" id="due${index}">
+                <label>Aligns with goal?
+                    <select id="goal${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+
+                <label>Consequence of not doing?
+                    <select id="consequence${index}">
+                        <option value="3">High</option>
+                        <option value="2">Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                </label>
+
+                <label>Best use of your time?
+                    <select id="time${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
                 </label>
             `;
             form.appendChild(taskDiv);
@@ -53,16 +71,42 @@
 
         function prioritizeTasks(event) {
             event.preventDefault();
-
             let taskList = document.getElementById("taskList");
             taskList.innerHTML = "";
             document.getElementById("result").style.display = "block";
 
             document.querySelectorAll(".task-container").forEach((task, index) => {
                 let name = task.querySelector(".task-input").value;
-                let dueDate = task.querySelector("input[type='datetime-local']").value;
-                
-                taskList.innerHTML += `<li><strong>${index + 1}. ${name}</strong> (Due: ${dueDate})</li>`;
+
+                task.innerHTML += `
+                    <label>How long will this task take? (Minutes)
+                        <input type="number" id="duration${index}" min="1">
+                    </label>
+                    
+                    <label>Best time to complete?
+                        <select id="bestTime${index}">
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                    </label>
+                    
+                    <label>Can be grouped with others?
+                        <select id="groupable${index}">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </label>
+                    
+                    <label>Requires deep focus?
+                        <select id="focus${index}">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </label>
+                `;
+
+                taskList.innerHTML += `<li><strong>${index + 1}. ${name}</strong></li>`;
             });
         }
     </script>
