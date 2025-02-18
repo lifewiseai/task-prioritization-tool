@@ -37,14 +37,33 @@
             width: 40%; 
         }
 
-        /* Task Input Section */
-        .task-container {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f9f9f9;
-            margin-bottom: 15px;
-        }
+        /* Improve task form layout */
+.task-container {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label and dropdown on the same line */
+.task-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px; /* Tighter spacing */
+    font-size: 14px;
+}
+
+/* Make dropdowns & inputs align properly */
+.task-label select, .task-label input {
+    width: 50%; /* Adjust width */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 
         /* Task List Styling */
         .task-list {
@@ -129,42 +148,49 @@
     taskDiv.innerHTML = `
         <h3>Task ${index + 1}</h3>
 
-        <label>Task Name:</label><br>
-        <input type="text" class="task-input" id="task${index}" required><br><br>
+        <label class="task-label">Task Name:
+            <input type="text" class="task-input" id="task${index}" required>
+        </label>
 
-        <label>Aligns with goal?</label><br>
-        <select id="goal${index}">
-            <option value="2">Yes</option>
-            <option value="1">No</option>
-        </select><br><br>
+        <label class="task-label">Aligns with goal?
+            <select id="goal${index}">
+                <option value="2">Yes</option>
+                <option value="1">No</option>
+            </select>
+        </label>
 
-        <label>Consequence of not doing?</label><br>
-        <select id="consequence${index}">
-            <option value="3">High</option>
-            <option value="2">Medium</option>
-            <option value="1">Low</option>
-        </select><br><br>
+        <label class="task-label">Consequence of not doing?
+            <select id="consequence${index}">
+                <option value="3">High</option>
+                <option value="2">Medium</option>
+                <option value="1">Low</option>
+            </select>
+        </label>
 
-        <label>Best use of your time?</label><br>
-        <select id="time${index}">
-            <option value="2">Yes</option>
-            <option value="1">No</option>
-        </select><br><br>
+        <label class="task-label">Best use of your time?
+            <select id="time${index}">
+                <option value="2">Yes</option>
+                <option value="1">No</option>
+            </select>
+        </label>
 
-        <label>Only you can do it?</label><br>
-        <select id="ownership${index}">
-            <option value="2">Yes</option>
-            <option value="1">No</option>
-        </select><br><br>
+        <label class="task-label">Only you can do it?
+            <select id="ownership${index}">
+                <option value="2">Yes</option>
+                <option value="1">No</option>
+            </select>
+        </label>
 
-        <label>Can be automated?</label><br>
-        <select id="automation${index}">
-            <option value="-1">Yes</option>
-            <option value="0">No</option>
-        </select><br><br>
+        <label class="task-label">Can be automated?
+            <select id="automation${index}">
+                <option value="-1">Yes</option>
+                <option value="0">No</option>
+            </select>
+        </label>
 
-        <label>Due Date & Time:</label><br>
-        <input type="datetime-local" id="due${index}"><br><br>
+        <label class="task-label">Due Date & Time:
+            <input type="datetime-local" id="due${index}">
+        </label>
     `;
     
     form.appendChild(taskDiv);
