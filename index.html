@@ -80,6 +80,10 @@
                         <option value="0">No</option>
                     </select>
                 </label>
+                
+                <label>Due Date & Time:
+                    <input type="datetime-local" id="due${index}">
+                </label>
             `;
             form.appendChild(taskDiv);
         }
@@ -98,7 +102,7 @@
                 taskItem.innerHTML = `<strong>${index + 1}. ${name}</strong>
                     <br>
                     <label>Due Date & Time:
-                        <input type="datetime-local" id="due${index}" value="${dueDate}">
+                        <input type="datetime-local" id="dueTask${index}" value="${dueDate}">
                     </label>
                     <br>
                     <label>How long will this task take? (Minutes)
