@@ -83,10 +83,6 @@
                         <option value="0">No</option>
                     </select>
                 </label>
-                
-                <label>Due Date & Time:
-                    <input type="datetime-local" id="due${index}">
-                </label>
             `;
             form.appendChild(taskDiv);
         }
@@ -101,7 +97,33 @@
                 let name = task.querySelector(".task-input").value;
                 let dueDate = task.querySelector("input[type='datetime-local']").value;
                 
-                taskList.innerHTML += `<li><strong>${index + 1}. ${name}</strong> (Due: ${dueDate})</li>`;
+                taskList.innerHTML += `<li><strong>${index + 1}. ${name}</strong> (Due: ${dueDate})
+                    <label>How long will this task take? (Minutes)
+                        <input type="number" id="duration${index}" min="1">
+                    </label>
+                    
+                    <label>Best time to complete?
+                        <select id="bestTime${index}">
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Evening">Evening</option>
+                        </select>
+                    </label>
+                    
+                    <label>Can be grouped with others?
+                        <select id="groupable${index}">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </label>
+                    
+                    <label>Requires deep focus?
+                        <select id="focus${index}">
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </label>
+                </li>`;
             });
         }
     </script>
