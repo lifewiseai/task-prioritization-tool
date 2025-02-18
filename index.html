@@ -88,20 +88,6 @@
             font-size: 16px;
         }
 
-        /* Automation & Delegation Warnings */
-        .task-list li span {
-            font-size: 13px;
-            font-weight: bold;
-            display: block;
-            margin-top: 5px;
-        }
-        .task-list li span[style="color: red;"] {
-            color: red;
-        }
-        .task-list li span[style="color: orange;"] {
-            color: orange;
-        }
-
         /* Button Styling */
         .add-btn, button {
             background: #007bff;
@@ -169,6 +155,28 @@
                     </select>
                 </label>
 
+                <label class="task-label">Consequence of not doing?
+                    <select id="consequence${index}">
+                        <option value="3">High</option>
+                        <option value="2">Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                </label>
+
+                <label class="task-label">Best use of your time?
+                    <select id="time${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+
+                <label class="task-label">Only you can do it?
+                    <select id="ownership${index}">
+                        <option value="2">Yes</option>
+                        <option value="1">No</option>
+                    </select>
+                </label>
+
                 <label class="task-label">Due Date & Time:
                     <input type="datetime-local" id="due${index}">
                 </label>
@@ -190,8 +198,11 @@
 
                 let dueDate = task.querySelector(`#due${index}`).value || "No due date set";
                 let goal = parseInt(task.querySelector(`#goal${index}`).value);
+                let consequence = parseInt(task.querySelector(`#consequence${index}`).value);
+                let time = parseInt(task.querySelector(`#time${index}`).value);
+                let ownership = parseInt(task.querySelector(`#ownership${index}`).value);
 
-                let priorityScore = goal;
+                let priorityScore = goal + consequence + time + ownership;
 
                 tasks.push({ name, dueDate, priorityScore });
             });
