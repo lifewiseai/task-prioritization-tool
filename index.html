@@ -2,7 +2,99 @@
 <html>
 <head>
     <title>Task Prioritization & Scheduling Tool</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            display: flex;
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .instructions {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .input-section {
+            width: 40%;
+            padding: 20px;
+            border-right: 1px solid #ddd;
+        }
+
+        .input-section h2 {
+            margin-top: 0;
+        }
+
+        .input-section label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-section input[type="text"],
+        .input-section input[type="number"],
+        .input-section input[type="datetime-local"],
+        .input-section select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Important! */
+        }
+
+        .input-section button {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .task-list-section {
+            width: 60%;
+            padding: 20px;
+        }
+
+        .task-list-section h2 {
+            margin-top: 0;
+        }
+
+        .task-list-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-list-section li {
+            padding: 10px;
+            margin-bottom: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        /* Basic responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                width: 95%;
+            }
+
+            .input-section,
+            .task-list-section {
+                width: 100%;
+                border-right: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -100,6 +192,172 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskForm = document.getElementById('task-form');
+            const taskList = document.getElementById('task-list');
+            const exportCsvButton = document.getElementById('export-csv');
+
+            let tasks = []; // Array to store tasks
+
+            taskForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent form submission
+
+                // Get task input values
+                const taskName = document.getElementById('task-name').value;
+                const outcome = parseInt(document.getElementById('outcome').value);
+                const consequence = parseInt(document.getElementById('consequence').value);
+                const valuable = parseInt(document.getElementById('valuable').value);
+                const onlyPerson = parseInt(document.getElementById('only-person').value);
+                const simplified = parseInt(document.getElementById('simplified').value);
+                const taskTime = parseInt(document.getElementById('task-time').value;
+                const bestTime = document.getElementById('best-time').value;
+                const grouped = document.getElementById('grouped').value;
+                const deepFocus = document.getElementById('deep-focus').value;
+                const deadlineHelp = document.getElementById('deadline-help').value;
+                const dueDate = document.getElementById('due-date').value;
+
+                // Calculate priority score
+                const priorityScore = outcome + consequence + valuable + onlyPerson;
+
+                // Create task object
+                const task = {
+                    id: Date.now(), // Unique ID for each task
+                    name: taskName,
+                    outcome: outcome,
+                    consequence: consequence,
+                    valuable: valuable,
+                    onlyPerson: onlyPerson,
+                    simplified: simplified,
+                    priorityScore: priorityScore,
+                    taskTime: taskTime,
+                    bestTime: bestTime,
+                    grouped: grouped,
+                    deepFocus: deepFocus,
+                    deadlineHelp: deadlineHelp,
+                    dueDate: dueDate
+                };
+
+                // Add task to the tasks array
+                tasks.push(task);
+
+                // Update the task list
+                updateTaskList();
+
+                // Reset the form
+                taskForm.reset();
+            });
+
+            function updateTaskList() {
+                // Sort tasks by priority score (descending)
+                tasks.sort((a, b) => b.priorityScore - a.priorityScore);
+
+                // Clear the task list
+                taskList.innerHTML = '';
+
+                // Create list items for each task
+                tasks.forEach((task, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <span>${task.name}</span>
+                        <span>Priority: <span id="priority-number">${task.priorityScore}</span></span>
+                        <span>Due: ${task.dueDate}</span>
+                        <span>Time: ${task.taskTime} minutes</span>
+                        <button class="up-arrow" data-task-id="${task.id}">▲</button>
+                        <button class="down-arrow" data-task-id="${task.id}">▼</button>
+                        <button class="edit-task" data-task-id="${task.id}">Edit</button>
+                        <button class="delete-task" data-task-id="${task.id}">Delete</button>
+                    `;
+                    taskList.appendChild(listItem);
+
+                });
+            }
+
+            // Event delegation for up/down arrows, edit, and delete buttons
+            taskList.addEventListener('click', function(event) {
+                const target = event.target;
+                const taskId = parseInt(target.dataset.taskId);
+
+                if (target.classList.contains('up-arrow')) {
+                    moveTaskUp(taskId);
+                } else if (target.classList.contains('down-arrow')) {
+                    moveTaskDown(taskId);
+                } else if (target.classList.contains('edit-task')) {
+                    editTask(taskId);
+                } else if (target.classList.contains('delete-task')) {
+                    deleteTask(taskId);
+                }
+            });
+
+            function moveTaskUp(taskId) {
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex > 0) {
+                    // Swap the task with the one above it
+                    [tasks[taskIndex], tasks[taskIndex - 1]] = [tasks[taskIndex - 1], tasks[taskIndex]];
+                    updateTaskList();
+                }
+            }
+
+            function moveTaskDown(taskId) {
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex < tasks.length - 1) {
+                    // Swap the task with the one below it
+                    [tasks[taskIndex], tasks[taskIndex + 1]] = [tasks[taskIndex + 1], tasks[taskIndex]];
+                    updateTaskList();
+                }
+            }
+
+            function editTask(taskId) {
+                // Find the task to edit
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex !== -1) {
+                    // For simplicity, let's just prompt for a new name
+                    const newName = prompt("Enter new task name:", tasks[taskIndex].name);
+                    if (newName !== null) {
+                        tasks[taskIndex].name = newName;
+                        updateTaskList();
+                    }
+                }
+            }
+
+            function deleteTask(taskId) {
+                // Find the task to delete
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex !== -1) {
+                    // Remove the task from the array
+                    tasks.splice(taskIndex, 1);
+                    updateTaskList();
+                }
+            }
+
+            exportCsvButton.addEventListener('click', function() {
+                exportTasksToCsv();
+            });
+
+            function exportTasksToCsv() {
+                let csvContent = "data:text/csv;charset=utf-8,";
+
+                // Add CSV header
+                csvContent += "Task Name,Priority Score,Due Date\r\n";
+
+                // Add task data
+                tasks.forEach(task => {
+                    csvContent += `${task.name},${task.priorityScore},${task.dueDate}\r\n`;
+                });
+
+                // Create a download link
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "tasks.csv");
+                document.body.appendChild(link); // Required for Firefox
+
+                // Trigger the download
+                link.click();
+
+                document.body.removeChild(link); // Clean up
+            }
+        });
+    </script>
 </body>
 </html>
