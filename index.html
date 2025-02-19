@@ -41,7 +41,6 @@
             max-height: 550px; 
             width: 40%;
             text-align: left;
-            display: none;
         }
 
         /* Task Form */
@@ -65,15 +64,11 @@
             align-items: center;
         }
 
-        .task-header:hover {
-            background: #0056b3;
-        }
-
         .toggle-icon {
             font-weight: bold;
         }
 
-        /* Task Details (Initially Hidden) */
+        /* Task Details */
         .task-details {
             padding: 10px;
             border: 1px solid #ddd;
@@ -83,7 +78,7 @@
             display: none;
         }
 
-        /* Label & Dropdown Alignment */
+        /* Dropdown Alignment */
         .task-label {
             display: flex;
             justify-content: space-between;
@@ -96,8 +91,6 @@
         .task-label select, .task-label input {
             width: 50%; 
             padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
         }
 
         /* Priority Colors */
@@ -105,54 +98,19 @@
         .medium-priority { border-left: 5px solid yellow; }
         .low-priority { border-left: 5px solid green; }
 
-        /* Task List Styling */
-        .task-list {
-            font-size: 14px; 
-            line-height: 1.5;
-            list-style: none;
-            padding: 0;
-        }
-
-        .task-list li {
-            margin-bottom: 12px;
-            padding: 12px;
-            border-radius: 6px;
-            background: #eef5ff;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
-
-        /* Buttons */
-        .add-btn, button {
-            background: #28a745;
-            color: white;
-            padding: 12px 15px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            transition: 0.3s ease;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .add-btn:hover, button:hover {
-            background: #218838;
-        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Task Entry Form -->
         <div class="task-section">
             <h2>Task Prioritization & Scheduling</h2>
             <button class="add-btn" onclick="addTask()">+ Add Task</button>
             <form id="taskInputs"></form>
             <button onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
+            <button onclick="exportToCSV()">Export to CSV</button>
         </div>
         
-        <!-- Prioritized Task List -->
         <div class="result" id="result">
             <h2>Prioritized Task List</h2>
             <ol id="taskList" class="task-list"></ol>
@@ -177,25 +135,6 @@
                     <label class="task-label">Task Name:
                         <input type="text" class="task-input" id="task${index}" required>
                     </label>
-
-                    <label class="task-label">Aligns with goal?
-                        <select id="goal${index}">
-                            <option value="2">Yes</option>
-                            <option value="1">No</option>
-                        </select>
-                    </label>
-
-                    <label class="task-label">Consequence of not doing?
-                        <select id="consequence${index}">
-                            <option value="3">High</option>
-                            <option value="2">Medium</option>
-                            <option value="1">Low</option>
-                        </select>
-                    </label>
-
-                    <label class="task-label">Due Date & Time:
-                        <input type="datetime-local" id="due${index}">
-                    </label>
                 </div>
             `;
 
@@ -206,13 +145,8 @@
             const details = document.getElementById(`taskDetails${index}`);
             const toggleIcon = document.querySelector(`#taskContainer${index} .toggle-icon`);
             
-            if (details.style.display === "none") {
-                details.style.display = "block";
-                toggleIcon.textContent = "[-]";
-            } else {
-                details.style.display = "none";
-                toggleIcon.textContent = "[+]";
-            }
+            details.style.display = details.style.display === "none" ? "block" : "none";
+            toggleIcon.textContent = details.style.display === "none" ? "[+]" : "[-]";
         }
     </script>
 
