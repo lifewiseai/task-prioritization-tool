@@ -6,104 +6,110 @@
     <title>Task Prioritization & Scheduling</title>
     
     <style>
-        /* General Page Styling */
-        body { 
-            font-family: Arial, sans-serif; 
-            margin: 20px; 
-            background-color: #f4f4f4; 
-            display: flex; 
-            justify-content: center;
-        }
+        <style>
+    /* 🔹 General Page Styling */
+    body { 
+        font-family: Arial, sans-serif; 
+        margin: 20px; 
+        background-color: #f4f4f4; 
+        display: flex; 
+        justify-content: center;
+    }
 
-        .container { 
-            max-width: 1100px; 
-            display: flex; 
-            gap: 20px; 
-        }
+    /* 🔹 Fix layout so tasks & prioritized list are side by side */
+    .container { 
+        max-width: 1100px; 
+        display: flex; 
+        gap: 20px;
+        justify-content: space-between;
+    }
 
-        .task-section { 
-            flex: 2; 
-            background: white; 
-            padding: 15px; 
-            border-radius: 8px; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-        }
+    .task-section { 
+        flex: 2; 
+        background: white; 
+        padding: 15px; 
+        border-radius: 8px; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+    }
 
-        .result { 
-            flex: 1; 
-            background: white; 
-            padding: 10px; 
-            border-radius: 8px; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-            overflow-y: auto; 
-            max-height: 550px; 
-            width: 40%; 
-        }
+    .result { 
+        flex: 1; 
+        background: white; 
+        padding: 10px; 
+        border-radius: 8px; 
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        overflow-y: auto; 
+        max-height: 550px; 
+        width: 40%;
+        text-align: left; /* Aligns task list properly */
+    }
 
-        /* Collapsible Task Headers */
-        .task-header {
-            background: #007bff;
-            color: white;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* 🔹 Collapsible Task Headers */
+    .task-header {
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .task-header:hover {
-            background: #0056b3;
-        }
+    .task-header:hover {
+        background: #0056b3;
+    }
 
-        .toggle-icon {
-            font-weight: bold;
-        }
+    .toggle-icon {
+        font-weight: bold;
+    }
 
-        /* Task Details (Initially Hidden) */
-        .task-details {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f9f9f9;
-            margin-top: 5px;
-            display: none;
-        }
+    /* 🔹 Task Details (Initially Hidden) */
+    .task-details {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background: #f9f9f9;
+        margin-top: 5px;
+        display: none;
+    }
 
-        /* Task List Styling */
-        .task-list {
-            font-size: 14px; 
-            line-height: 1.5;
-            list-style: none;
-            padding: 0;
-        }
+    /* 🔹 Task List Styling */
+    .task-list {
+        font-size: 14px; 
+        line-height: 1.5;
+        list-style: none;
+        padding: 0;
+    }
 
-        .task-list li {
-            margin-bottom: 12px;
-            padding: 12px;
-            border-radius: 6px;
-            background: #eef5ff;
-            border-left: 5px solid #007bff;
-            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
-        }
+    .task-list li {
+        margin-bottom: 12px;
+        padding: 12px;
+        border-radius: 6px;
+        background: #eef5ff;
+        border-left: 5px solid #007bff;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
 
-        /* Button Styling */
-        .add-btn, button {
-            background: #007bff;
-            color: white;
-            padding: 12px 15px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            transition: 0.3s ease;
-        }
+    /* 🔹 Button Styling */
+    .add-btn, button {
+        background: #007bff;
+        color: white;
+        padding: 12px 15px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        transition: 0.3s ease;
+    }
 
-        .add-btn:hover, button:hover {
-            background: #0056b3;
-        }
+    .add-btn:hover, button:hover {
+        background: #0056b3;
+    }
+</style>
+
     </style>
 </head>
 <body>
