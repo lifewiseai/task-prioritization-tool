@@ -52,9 +52,10 @@
             width: 60%; /* Adjust label width */
             margin-right: 10px;
             text-align: right;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            /* Remove the following properties to allow wrapping */
+            /* white-space: nowrap; */
+            /* overflow: hidden; */
+            /* text-overflow: ellipsis; */
         }
 
         .form-row .radio-group {
@@ -119,6 +120,7 @@
                 width: 100%;
                 text-align: left;
                 margin-bottom: 5px;
+                /* Ensure wrapping is allowed on smaller screens */
                 white-space: normal;
                 overflow: visible;
                 text-overflow: clip;
