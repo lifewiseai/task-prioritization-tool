@@ -1,206 +1,428 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Prioritization & Scheduling</title>
-
+    <title>Task Prioritization & Scheduling Tool</title>
     <style>
-        /* General Page Layout */
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
             background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
         }
 
         .container {
-            max-width: 1100px;
-            display: flex;
+            display: grid;
+            grid-template-columns: 60% 40%; /* Adjust column widths */
             gap: 20px;
-            justify-content: space-between;
-            align-items: flex-start;
-        }
-
-        .task-section {
-            flex: 2;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
+            width: 95%;
+            margin: 20px auto;
+            background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
-        .result {
-            flex: 1;
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            overflow-y: auto;
-            max-height: 550px;
-            width: 40%;
+        .instructions {
+            grid-column: 1 / 3;
+            padding: 20px;
             text-align: left;
         }
 
-        /* Collapsible Task Headers */
-        .task-header {
-            background: #007bff;
+        .introduction {
+            grid-column: 1 / 3;
+            padding: 10px 20px;
+            text-align: left;
+            font-style: italic;
+            color: #555;
+        }
+
+        .input-section {
+            padding: 20px;
+        }
+
+        .input-section h2 {
+            margin-top: 0;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-row label {
+            width: 60%; /* Adjust label width */
+            margin-right: 10px;
+            text-align: right;
+            /* Remove the following properties to allow wrapping */
+            /* white-space: nowrap; */
+            /* overflow: hidden; */
+            /* text-overflow: ellipsis; */
+        }
+
+        .form-row .radio-group {
+            width: 40%; /* Adjust radio group width */
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .input-section button {
+            background-color: #5cb85c;
             color: white;
-            padding: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
-        .toggle-icon {
-            font-weight: bold;
+        .task-list-section {
+            padding: 20px;
         }
 
-        /* Task Details */
-        .task-details {
+        .task-list-section h2 {
+            margin-top: 0;
+        }
+
+        .task-list-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task-list-section li {
             padding: 10px;
+            margin-bottom: 5px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            background: #f9f9f9;
-            margin-top: 5px;
-            display: none;
+            border-radius: 4px;
+            background-color: #f9f9f9;
         }
 
-        /* Label & Dropdown Alignment */
-        .task-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: bold;
-        }
+        /* Basic responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
 
-        .task-label select, .task-label input {
-            width: 50%;
-            padding: 5px;
-        }
+            .introduction,
+            .instructions {
+                grid-column: 1;
+                text-align: center;
+            }
 
-        /* Priority Colors */
-        .high-priority { border-left: 5px solid red; }
-        .medium-priority { border-left: 5px solid yellow; }
-        .low-priority { border-left: 5px solid green; }
+            .input-section,
+            .task-list-section {
+                width: 100%;
+            }
+
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-row label {
+                width: 100%;
+                text-align: left;
+                margin-bottom: 5px;
+                /* Ensure wrapping is allowed on smaller screens */
+                white-space: normal;
+                overflow: visible;
+                text-overflow: clip;
+            }
+
+            .form-row .radio-group {
+                width: 100%;
+                flex-direction: row; /* Adjust radio buttons horizontally */
+                justify-content: space-around; /* Distribute buttons evenly */
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="container">
-        <div class="task-section">
-            <h2>Task Prioritization & Scheduling</h2>
-            <button class="add-btn" onclick="addTask()">+ Add Task</button>
-            <form id="taskInputs"></form>
-            <button onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
-            <button onclick="exportToCSV()">Export to CSV</button>
+        <div class="instructions">
+            <h1>Task Prioritization & Scheduling Tool</h1>
+           <div class="introduction">
+            This tool helps you prioritize tasks based on their importance, urgency, and alignment with your goals.
+            It ensures that you focus on high-impact work while managing your time effectively. This tool helps you
+            focus on what matters most, avoid distractions, and improve productivity.
+        </div>
+            <p>Enter your tasks, answer the prioritization questions, and set due dates to create a prioritized schedule.</p>
         </div>
 
-        <div class="result" id="result">
+        <div class="input-section">
+            <h2>Add New Task</h2>
+            <form id="task-form">
+                <div class="form-row">
+                    <label for="task-name">Task Name:</label>
+                    <input type="text" id="task-name" name="task-name" required>
+                </div>
+
+                <details>
+                    <summary>Prioritization Questions</summary>
+                    <div class="form-row">
+                        <label for="outcome">What outcome am I trying to achieve, and does this task move me meaningfully toward it?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="outcome" value="1" required>Yes</label>
+                            <label><input type="radio" name="outcome" value="0" required>No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="consequence">What is the consequence of not doing this task now?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="consequence" value="3" required>High</label>
+                            <label><input type="radio" name="consequence" value="2" required>Medium</label>
+                            <label><input type="radio" name="consequence" value="1" required>Low</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="valuable">Is this the most valuable use of my time compared to other options?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="valuable" value="1" required>Yes</label>
+                            <label><input type="radio" name="valuable" value="0" required>No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="only-person">Am I the only person who can or should do this?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="only-person" value="1" required>Yes</label>
+                            <label><input type="radio" name="only-person" value="0" required>No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="simplified">Can this task be simplified, batched, or automated to reduce effort?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="simplified" value="1" required>Yes</label>
+                            <label><input type="radio" name="simplified" value="0" required>No</label>
+                        </div>
+                    </div>
+                </details>
+
+                <details>
+                    <summary>Time Management Questions</summary>
+                    <div class="form-row">
+                        <label for="task-time">How long will this task take? (Minutes):</label>
+                        <input type="number" id="task-time" name="task-time" required>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="best-time">What is the best time of day to complete it?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="best-time" value="Morning" required>Morning</label>
+                            <label><input type="radio" name="best-time" value="Afternoon" required>Afternoon</label>
+                            <label><input type="radio" name="best-time" value="Evening" required>Evening</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="grouped">Can this task be grouped with others?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="grouped" value="1" required>Yes</label>
+                            <label><input type="radio" name="grouped" value="0" required>No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="deep-focus">Does this task require deep focus?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="deep-focus" value="1" required>Yes</label>
+                            <label><input type="radio" name="deep-focus" value="0" required>No</label>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <label for="deadline-help">Would setting a deadline help?</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="deadline-help" value="1" required>Yes</label>
+                            <label><input type="radio" name="deadline-help" value="0" required>No</label>
+                        </div>
+                    </div>
+                </details>
+
+                <div class="form-row">
+                    <label for="due-date">Due Date & Time:</label>
+                    <input type="datetime-local" id="due-date" name="due-date" required>
+                </div>
+
+                <button type="submit">Add Task</button>
+            </form>
+        </div>
+
+        <div class="task-list-section">
             <h2>Prioritized Task List</h2>
-            <ol id="taskList" class="task-list"></ol>
+            <ul id="task-list">
+                <!-- Tasks will be added here dynamically -->
+            </ul>
+            <button id="export-csv">Export to CSV</button>
         </div>
     </div>
 
     <script>
-        function addTask() {
-            const form = document.getElementById("taskInputs");
-            const index = form.children.length;
+        document.addEventListener('DOMContentLoaded', function() {
+            const taskForm = document.getElementById('task-form');
+            const taskList = document.getElementById('task-list');
+            const exportCsvButton = document.getElementById('export-csv');
 
-            const taskDiv = document.createElement("div");
-            taskDiv.classList.add("task-container");
-            taskDiv.setAttribute("id", `taskContainer${index}`);
+            let tasks = []; // Array to store tasks
 
-            taskDiv.innerHTML = `
-                <div class="task-header" onclick="toggleTask(${index})">
-                    <strong id="taskTitle${index}">Task ${index + 1}</strong>
-                    <span class="toggle-icon">[+]</span>
-                </div>
-                <div class="task-details" id="taskDetails${index}">
-                    <label class="task-label">Task Name:
-                        <input type="text" class="task-input" id="task${index}" required>
-                    </label>
-                    <label class="task-label">Aligns with goal?
-                        <select id="goal${index}">
-                            <option value="2">Yes</option>
-                            <option value="1">No</option>
-                        </select>
-                    </label>
-                    <label class="task-label">Consequence of not doing?
-                        <select id="consequence${index}">
-                            <option value="3">High</option>
-                            <option value="2">Medium</option>
-                            <option value="1">Low</option>
-                        </select>
-                    </label>
-                    <label class="task-label">Best use of your time?
-                        <select id="time${index}">
-                            <option value="2">Yes</option>
-                            <option value="1">No</option>
-                        </select>
-                    </label>
-                    <label class="task-label">Only you can do it?
-                        <select id="ownership${index}">
-                            <option value="2">Yes</option>
-                            <option value="1">No</option>
-                        </select>
-                    </label>
-                    <label class="task-label">Due Date & Time:
-                        <input type="datetime-local" id="due${index}">
-                    </label>
-                </div>
-            `;
+            taskForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent form submission
 
-            form.appendChild(taskDiv);
-        }
+                // Get task input values
+                const taskName = document.getElementById('task-name').value;
+                const outcome = parseInt(document.querySelector('input[name="outcome"]:checked').value);
+                const consequence = parseInt(document.querySelector('input[name="consequence"]:checked').value);
+                const valuable = parseInt(document.querySelector('input[name="valuable"]:checked').value);
+                const onlyPerson = parseInt(document.querySelector('input[name="only-person"]:checked').value);
+                const simplified = parseInt(document.querySelector('input[name="simplified"]:checked').value);
+                const taskTime = parseInt(document.getElementById('task-time').value);
+                const bestTime = document.querySelector('input[name="best-time"]:checked').value;
+                const grouped = parseInt(document.querySelector('input[name="grouped"]:checked').value);
+                const deepFocus = parseInt(document.querySelector('input[name="deep-focus"]:checked').value);
+                const deadlineHelp = parseInt(document.querySelector('input[name="deadline-help"]:checked').value);
+                const dueDate = document.getElementById('due-date').value;
 
-        function toggleTask(index) {
-            const details = document.getElementById(`taskDetails${index}`);
-            const toggleIcon = document.querySelector(`#taskContainer${index} .toggle-icon`);
+                // Calculate priority score
+                const priorityScore = outcome + consequence + valuable + onlyPerson;
 
-            details.style.display = details.style.display === "none" ? "block" : "none";
-            toggleIcon.textContent = details.style.display === "none" ? "[+]" : "[-]";
-        }
+                // Create task object
+                const task = {
+                    id: Date.now(), // Unique ID for each task
+                    name: taskName,
+                    outcome: outcome,
+                    consequence: consequence,
+                    valuable: valuable,
+                    onlyPerson: onlyPerson,
+                    simplified: simplified,
+                    priorityScore: priorityScore,
+                    taskTime: taskTime,
+                    bestTime: bestTime,
+                    grouped: grouped,
+                    deepFocus: deepFocus,
+                    deadlineHelp: deadlineHelp,
+                    dueDate: dueDate
+                };
 
-        function prioritizeTasks(event) {
-            event.preventDefault();
-            const taskList = document.getElementById("taskList");
-            taskList.innerHTML = "";
+                // Add task to the tasks array
+                tasks.push(task);
 
-            document.getElementById("result").style.display = "block";
+                // Update the task list
+                updateTaskList();
 
-            const tasks = [];
-
-            document.querySelectorAll(".task-container").forEach((task, index) => {
-                const name = task.querySelector(".task-input").value.trim();
-                const dueDate = task.querySelector(`#due${index}`).value || "No due date";
-                const goal = parseInt(task.querySelector(`#goal${index}`).value);
-                const consequence = parseInt(task.querySelector(`#consequence${index}`).value);
-                const time = parseInt(task.querySelector(`#time${index}`).value);
-                const ownership = parseInt(task.querySelector(`#ownership${index}`).value);
-
-                const priorityScore = goal + consequence + time + ownership;
-                tasks.push({ name, dueDate, priorityScore });
+                // Reset the form
+                taskForm.reset();
             });
 
-            tasks.sort((a, b) => b.priorityScore - a.priorityScore);
+            function updateTaskList() {
+                // Sort tasks by priority score (descending)
+                tasks.sort((a, b) => b.priorityScore - a.priorityScore);
 
-            tasks.forEach((task, index) => {
-                const taskItem = document.createElement("li");
-                taskItem.innerHTML = `<strong>${index + 1}. ${task.name}</strong> (Priority: ${task.priorityScore}) <br><small>Due: ${task.dueDate}</small>`;
-                taskItem.classList.add(
-                    task.priorityScore >= 8 ? "high-priority" :
-                    task.priorityScore >= 5 ? "medium-priority" : "low-priority"
-                );
+                // Clear the task list
+                taskList.innerHTML = '';
 
-                taskList.appendChild(taskItem);
+                // Create list items for each task
+                tasks.forEach((task, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <span>${task.name}</span>
+                        <span>Priority: <span id="priority-number">${task.priorityScore}</span></span>
+                        <span>Due: ${task.dueDate}</span>
+                        <span>Time: ${task.taskTime} minutes</span>
+                        <button class="up-arrow" data-task-id="${task.id}">▲</button>
+                        <button class="down-arrow" data-task-id="${task.id}">▼</button>
+                        <button class="edit-task" data-task-id="${task.id}">Edit</button>
+                        <button class="delete-task" data-task-id="${task.id}">Delete</button>
+                    `;
+                    taskList.appendChild(listItem);
+
+                });
+            }
+
+            // Event delegation for up/down arrows, edit, and delete buttons
+            taskList.addEventListener('click', function(event) {
+                const target = event.target;
+                const taskId = parseInt(target.dataset.taskId);
+
+                if (target.classList.contains('up-arrow')) {
+                    moveTaskUp(taskId);
+                } else if (target.classList.contains('down-arrow')) {
+                    moveTaskDown(taskId);
+                } else if (target.classList.contains('edit-task')) {
+                    editTask(taskId);
+                } else if (target.classList.contains('delete-task')) {
+                    deleteTask(taskId);
+                }
             });
-        }
+
+            function moveTaskUp(taskId) {
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex > 0) {
+                    // Swap the task with the one above it
+                    [tasks[taskIndex], tasks[taskIndex - 1]] = [tasks[taskIndex - 1], tasks[taskIndex]];
+                    updateTaskList();
+                }
+            }
+
+            function moveTaskDown(taskId) {
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex < tasks.length - 1) {
+                    // Swap the task with the one below it
+                    [tasks[taskIndex], tasks[taskIndex + 1]] = [tasks[taskIndex + 1], tasks[taskIndex]];
+                    updateTaskList();
+                }
+            }
+
+            function editTask(taskId) {
+                // Find the task to edit
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex !== -1) {
+                    // For simplicity, let's just prompt for a new name
+                    const newName = prompt("Enter new task name:", tasks[taskIndex].name);
+                    if (newName !== null) {
+                        tasks[taskIndex].name = newName;
+                        updateTaskList();
+                    }
+                }
+            }
+
+            function deleteTask(taskId) {
+                // Find the task to delete
+                const taskIndex = tasks.findIndex(task => task.id === taskId);
+                if (taskIndex !== -1) {
+                    // Remove the task from the array
+                    tasks.splice(taskIndex, 1);
+                    updateTaskList();
+                }
+            }
+
+            exportCsvButton.addEventListener('click', function() {
+                exportTasksToCsv();
+            });
+
+            function exportTasksToCsv() {
+                let csvContent = "data:text/csv;charset=utf-8,";
+
+                // Add CSV header
+                csvContent += "Task Name,Priority Score,Due Date\r\n";
+
+                // Add task data
+                tasks.forEach(task => {
+                    csvContent += `${task.name},${task.priorityScore},${task.dueDate}\r\n`;
+                });
+
+                // Create a download link
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "tasks.csv");
+                document.body.appendChild(link); // Required for Firefox
+
+                // Trigger the download
+                link.click();
+
+                document.body.removeChild(link); // Clean up
+            }
+        });
     </script>
 </body>
 </html>
