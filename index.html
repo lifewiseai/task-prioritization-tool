@@ -6,141 +6,104 @@
     <title>Task Prioritization & Scheduling</title>
     
     <style>
-        <style>
-    /* 🔹 General Page Styling */
-    body { 
-        font-family: Arial, sans-serif; 
-        margin: 20px; 
-        background-color: #f4f4f4; 
-        display: flex; 
-        justify-content: center;
-    }
+        /* General Page Styling */
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background-color: #f4f4f4; 
+            display: flex; 
+            justify-content: center;
+        }
 
-    .container { 
-        max-width: 1100px; 
-        display: flex; 
-        gap: 20px; 
-    }
+        .container { 
+            max-width: 1100px; 
+            display: flex; 
+            gap: 20px; 
+        }
 
-    .task-section { 
-        flex: 2; 
-        background: white; 
-        padding: 15px; 
-        border-radius: 8px; 
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-    }
+        .task-section { 
+            flex: 2; 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
 
-    .result { 
-        flex: 1; 
-        background: white; 
-        padding: 10px; 
-        border-radius: 8px; 
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
-        overflow-y: auto; 
-        max-height: 550px; 
-        width: 40%; 
-    }
+        .result { 
+            flex: 1; 
+            background: white; 
+            padding: 10px; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            overflow-y: auto; 
+            max-height: 550px; 
+            width: 40%; 
+        }
 
-    /* 🔹 Task Input Section */
-    .task-container {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background: #f9f9f9;
-        margin-bottom: 10px;
-    }
+        /* Collapsible Task Headers */
+        .task-header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    /* ✅ Collapsible Task Headers */
-    .task-header {
-        background: #007bff;
-        color: white;
-        padding: 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        .task-header:hover {
+            background: #0056b3;
+        }
 
-    .task-header:hover {
-        background: #0056b3;
-    }
+        .toggle-icon {
+            font-weight: bold;
+        }
 
-    .toggle-icon {
-        font-weight: bold;
-    }
+        /* Task Details (Initially Hidden) */
+        .task-details {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #f9f9f9;
+            margin-top: 5px;
+            display: none;
+        }
 
-    /* ✅ Task Details (Initially Hidden) */
-    .task-details {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background: #f9f9f9;
-        margin-top: 5px;
-        display: none; /* Tasks start as collapsed */
-    }
+        /* Task List Styling */
+        .task-list {
+            font-size: 14px; 
+            line-height: 1.5;
+            list-style: none;
+            padding: 0;
+        }
 
-    /* 🔹 Label and dropdown alignment */
-    .task-label {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 5px; 
-        font-size: 14px;
-    }
+        .task-list li {
+            margin-bottom: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            background: #eef5ff;
+            border-left: 5px solid #007bff;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
 
-    /* 🔹 Make dropdowns & inputs align properly */
-    .task-label select, .task-label input {
-        width: 50%; 
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+        /* Button Styling */
+        .add-btn, button {
+            background: #007bff;
+            color: white;
+            padding: 12px 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: 0.3s ease;
+        }
 
-    /* ✅ Task List Styling */
-    .task-list {
-        font-size: 14px; 
-        line-height: 1.5;
-        list-style: none;
-        padding: 0;
-    }
-
-    .task-list li {
-        margin-bottom: 12px;
-        padding: 12px;
-        border-radius: 6px;
-        background: #eef5ff;
-        border-left: 5px solid #007bff;
-        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-        position: relative;
-    }
-
-    /* ✅ Priority Score Styling */
-    .task-list li strong {
-        color: #0056b3;
-        font-size: 16px;
-    }
-
-    /* ✅ Button Styling */
-    .add-btn, button {
-        background: #007bff;
-        color: white;
-        padding: 12px 15px;
-        border: none;
-        cursor: pointer;
-        font-size: 14px;
-        border-radius: 5px;
-        margin-bottom: 10px;
-        transition: 0.3s ease;
-    }
-
-    .add-btn:hover, button:hover {
-        background: #0056b3;
-    }
-</style>
-
-    
-
+        .add-btn:hover, button:hover {
+            background: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -148,17 +111,8 @@
     <div class="container">
         <div class="task-section">
             <h2>Task Prioritization & Scheduling</h2>
-            <p><strong>Introduction:</strong> This tool helps you **prioritize tasks** based on importance and urgency, then schedules them efficiently.</p>
+            <p><strong>Introduction:</strong> This tool helps you prioritize tasks based on importance and urgency.</p>
             
-            <!-- 📌 Instructions Section -->
-            <p><strong>How to Use:</strong></p>
-            <ul>
-                <li>Click "+ Add Task" to enter a new task.</li>
-                <li>Answer each prioritization question honestly.</li>
-                <li>Click "Prioritize & Schedule" to rank your tasks.</li>
-                <li>Review the prioritized list and adjust due dates if needed.</li>
-            </ul>
-
             <button class="add-btn" onclick="addTask()">+ Add Task</button>
             <form id="taskInputs"></form>
             <button onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
@@ -172,112 +126,80 @@
 
     <script>
         function addTask() {
-    const form = document.getElementById("taskInputs");
-    const index = form.children.length;
+            const form = document.getElementById("taskInputs");
+            const index = form.children.length;
 
-    const taskDiv = document.createElement("div");
-    taskDiv.classList.add("task-container");
-    taskDiv.setAttribute("id", `taskContainer${index}`);
+            const taskDiv = document.createElement("div");
+            taskDiv.classList.add("task-container");
+            taskDiv.setAttribute("id", `taskContainer${index}`);
 
-    // Collapsible Task Header
-    taskDiv.innerHTML = `
-        <div class="task-header" onclick="toggleTask(${index})">
-            <strong id="taskTitle${index}">Task ${index + 1}</strong> 
-            <span class="toggle-icon">[+]</span>
-        </div>
-        <div class="task-details" id="taskDetails${index}" style="display: none;">
-            <label class="task-label">Task Name:
-                <input type="text" class="task-input" id="task${index}" required oninput="updateTaskTitle(${index})">
-            </label>
+            taskDiv.innerHTML = `
+                <div class="task-header" onclick="toggleTask(${index})">
+                    <strong id="taskTitle${index}">Task ${index + 1}</strong> 
+                    <span class="toggle-icon">[+]</span>
+                </div>
+                <div class="task-details" id="taskDetails${index}">
+                    <label>Task Name:
+                        <input type="text" class="task-input" id="task${index}" required oninput="updateTaskTitle(${index})">
+                    </label>
 
-            <label class="task-label">Aligns with goal?
-                <select id="goal${index}">
-                    <option value="2">Yes</option>
-                    <option value="1">No</option>
-                </select>
-            </label>
+                    <label>Aligns with goal?
+                        <select id="goal${index}">
+                            <option value="2">Yes</option>
+                            <option value="1">No</option>
+                        </select>
+                    </label>
 
-            <label class="task-label">Consequence of not doing?
-                <select id="consequence${index}">
-                    <option value="3">High</option>
-                    <option value="2">Medium</option>
-                    <option value="1">Low</option>
-                </select>
-            </label>
+                    <label>Consequence of not doing?
+                        <select id="consequence${index}">
+                            <option value="3">High</option>
+                            <option value="2">Medium</option>
+                            <option value="1">Low</option>
+                        </select>
+                    </label>
 
-            <label class="task-label">Best use of your time?
-                <select id="time${index}">
-                    <option value="2">Yes</option>
-                    <option value="1">No</option>
-                </select>
-            </label>
+                    <label>Best use of your time?
+                        <select id="time${index}">
+                            <option value="2">Yes</option>
+                            <option value="1">No</option>
+                        </select>
+                    </label>
 
-            <label class="task-label">Only you can do it?
-                <select id="ownership${index}">
-                    <option value="2">Yes</option>
-                    <option value="1">No</option>
-                </select>
-            </label>
+                    <label>Only you can do it?
+                        <select id="ownership${index}">
+                            <option value="2">Yes</option>
+                            <option value="1">No</option>
+                        </select>
+                    </label>
 
-            <label class="task-label">Due Date & Time:
-                <input type="datetime-local" id="due${index}">
-            </label>
-        </div>
-    `;
+                    <label>Due Date & Time:
+                        <input type="datetime-local" id="due${index}">
+                    </label>
+                </div>
+            `;
 
-    form.appendChild(taskDiv);
-}
+            form.appendChild(taskDiv);
+        }
 
-        function prioritizeTasks(event) {
-            event.preventDefault();
-            let tasks = [];
-            let taskList = document.getElementById("taskList");
-            taskList.innerHTML = "";
-            document.getElementById("result").style.display = "block";
+        function toggleTask(index) {
+            const details = document.getElementById(`taskDetails${index}`);
+            const toggleIcon = document.querySelector(`#taskContainer${index} .toggle-icon`);
+            
+            if (details.style.display === "none") {
+                details.style.display = "block";
+                toggleIcon.textContent = "[-]";
+            } else {
+                details.style.display = "none";
+                toggleIcon.textContent = "[+]";
+            }
+        }
 
-            document.querySelectorAll(".task-container").forEach((task, index) => {
-                let name = task.querySelector(".task-input").value.trim();
-                if (!name) return;
-
-                let dueDate = task.querySelector(`#due${index}`).value || "No due date set";
-                let goal = parseInt(task.querySelector(`#goal${index}`).value);
-                let consequence = parseInt(task.querySelector(`#consequence${index}`).value);
-                let time = parseInt(task.querySelector(`#time${index}`).value);
-                let ownership = parseInt(task.querySelector(`#ownership${index}`).value);
-
-                let priorityScore = goal + consequence + time + ownership;
-
-                tasks.push({ name, dueDate, priorityScore });
-            });
-
-            tasks.sort((a, b) => b.priorityScore - a.priorityScore);
-
-            tasks.forEach((task, index) => {
-                let taskItem = document.createElement("li");
-                taskItem.innerHTML = `<strong>${index + 1}. ${task.name}</strong> (Priority: ${task.priorityScore})
-                <br><small>Due: ${task.dueDate}</small>`;
-
-                taskList.appendChild(taskItem);
-            });
+        function updateTaskTitle(index) {
+            const taskName = document.getElementById(`task${index}`).value.trim();
+            const taskTitle = document.getElementById(`taskTitle${index}`);
+            taskTitle.textContent = taskName ? taskName : `Task ${index + 1}`;
         }
     </script>
-function toggleTask(index) {
-    const details = document.getElementById(`taskDetails${index}`);
-    const toggleIcon = document.querySelector(`#taskContainer${index} .toggle-icon`);
-    
-    if (details.style.display === "none") {
-        details.style.display = "block";
-        toggleIcon.textContent = "[-]";
-    } else {
-        details.style.display = "none";
-        toggleIcon.textContent = "[+]";
-    }
-}
 
-function updateTaskTitle(index) {
-    const taskName = document.getElementById(`task${index}`).value.trim();
-    const taskTitle = document.getElementById(`taskTitle${index}`);
-    taskTitle.textContent = taskName ? taskName : `Task ${index + 1}`;
-}
 </body>
 </html>
