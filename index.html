@@ -12,7 +12,7 @@
 
         .container {
             display: flex;
-            width: 80%;
+            width: 95%; /* Increased width */
             margin: 20px auto;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -20,11 +20,11 @@
 
         .instructions {
             padding: 20px;
-            text-align: center;
+            text-align: left; /* Aligned to the left */
         }
 
         .input-section {
-            width: 40%;
+            width: 50%; /* Reduced width to make more room for the instructions */
             padding: 20px;
             border-right: 1px solid #ddd;
         }
@@ -35,22 +35,22 @@
 
         .form-row {
             display: flex;
-            align-items: center; /* Vertically align items */
+            align-items: center;
             margin-bottom: 10px;
         }
 
         .form-row label {
-            width: 60%; /* Adjust as needed */
+            width: 70%; /* Increased width to accommodate longer questions */
             margin-right: 10px;
-            text-align: right; /* Align labels to the right */
-            word-break: break-word; /* Prevent labels from overflowing */
+            text-align: right;
+            white-space: normal; /* questions are allowed to wrap */
         }
 
         .form-row select,
         .form-row input[type="text"],
         .form-row input[type="number"],
         .form-row input[type="datetime-local"] {
-            width: 40%; /* Adjust as needed */
+            width: 30%;
             padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -67,7 +67,7 @@
         }
 
         .task-list-section {
-            width: 60%;
+            width: 50%; /* matching the input section to use the rest of the width of the container */
             padding: 20px;
         }
 
@@ -93,6 +93,10 @@
             .container {
                 flex-direction: column;
                 width: 95%;
+            }
+
+            .instructions {
+              text-align: center;
             }
 
             .input-section,
