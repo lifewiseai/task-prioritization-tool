@@ -6,7 +6,7 @@
     <title>Task Prioritization & Scheduling</title>
     
     <style>
-        /* General Page Layout */
+        /* General Layout */
         body { 
             font-family: Arial, sans-serif; 
             margin: 20px; 
@@ -83,13 +83,14 @@
             display: none;
         }
 
-        /* Label and Dropdown Alignment */
+        /* Label & Dropdown Alignment */
         .task-label {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px; 
+            margin-bottom: 8px;
             font-size: 14px;
+            font-weight: bold;
         }
 
         .task-label select, .task-label input {
@@ -98,6 +99,11 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+
+        /* Priority Colors */
+        .high-priority { border-left: 5px solid red; }
+        .medium-priority { border-left: 5px solid yellow; }
+        .low-priority { border-left: 5px solid green; }
 
         /* Task List Styling */
         .task-list {
@@ -112,14 +118,13 @@
             padding: 12px;
             border-radius: 6px;
             background: #eef5ff;
-            border-left: 5px solid #007bff;
             box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
             position: relative;
         }
 
-        /* Button Styling */
+        /* Buttons */
         .add-btn, button {
-            background: #007bff;
+            background: #28a745;
             color: white;
             padding: 12px 15px;
             border: none;
@@ -128,17 +133,18 @@
             border-radius: 5px;
             margin-bottom: 10px;
             transition: 0.3s ease;
+            box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
         }
 
         .add-btn:hover, button:hover {
-            background: #0056b3;
+            background: #218838;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Task Entry Form (Left Side) -->
+        <!-- Task Entry Form -->
         <div class="task-section">
             <h2>Task Prioritization & Scheduling</h2>
             <button class="add-btn" onclick="addTask()">+ Add Task</button>
@@ -146,9 +152,9 @@
             <button onclick="prioritizeTasks(event)">Prioritize & Schedule</button>
         </div>
         
-        <!-- Prioritized Task List (Right Side) -->
+        <!-- Prioritized Task List -->
         <div class="result" id="result">
-            <h2>Prioritized Task List & Scheduling</h2>
+            <h2>Prioritized Task List</h2>
             <ol id="taskList" class="task-list"></ol>
         </div>
     </div>
@@ -179,6 +185,14 @@
                         </select>
                     </label>
 
+                    <label class="task-label">Consequence of not doing?
+                        <select id="consequence${index}">
+                            <option value="3">High</option>
+                            <option value="2">Medium</option>
+                            <option value="1">Low</option>
+                        </select>
+                    </label>
+
                     <label class="task-label">Due Date & Time:
                         <input type="datetime-local" id="due${index}">
                     </label>
@@ -199,26 +213,6 @@
                 details.style.display = "none";
                 toggleIcon.textContent = "[+]";
             }
-        }
-
-        function prioritizeTasks(event) {
-            event.preventDefault();
-            let taskList = document.getElementById("taskList");
-            taskList.innerHTML = "";
-            document.getElementById("result").style.display = "block";
-
-            document.querySelectorAll(".task-container").forEach((task, index) => {
-                let name = task.querySelector(".task-input").value.trim();
-                if (!name) return;
-
-                let dueDate = task.querySelector(`#due${index}`).value || "No due date set";
-
-                let taskItem = document.createElement("li");
-                taskItem.innerHTML = `<strong>${index + 1}. ${name}</strong>
-                <br><small>Due: ${dueDate}</small>`;
-
-                taskList.appendChild(taskItem);
-            });
         }
     </script>
 
