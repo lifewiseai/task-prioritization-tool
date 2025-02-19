@@ -33,21 +33,28 @@
             margin-top: 0;
         }
 
-        .input-section label {
-            display: block;
-            margin-bottom: 5px;
+        .form-row {
+            display: flex;
+            align-items: center; /* Vertically align items */
+            margin-bottom: 10px;
         }
 
-        .input-section input[type="text"],
-        .input-section input[type="number"],
-        .input-section input[type="datetime-local"],
-        .input-section select {
-            width: 100%;
+        .form-row label {
+            width: 60%; /* Adjust as needed */
+            margin-right: 10px;
+            text-align: right; /* Align labels to the right */
+            word-break: break-word; /* Prevent labels from overflowing */
+        }
+
+        .form-row select,
+        .form-row input[type="text"],
+        .form-row input[type="number"],
+        .form-row input[type="datetime-local"] {
+            width: 40%; /* Adjust as needed */
             padding: 8px;
-            margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box; /* Important! */
+            box-sizing: border-box;
         }
 
         .input-section button {
@@ -93,6 +100,24 @@
                 width: 100%;
                 border-right: none;
             }
+
+            .form-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .form-row label {
+                width: 100%;
+                text-align: left;
+                margin-bottom: 5px;
+            }
+
+            .form-row select,
+            .form-row input[type="text"],
+            .form-row input[type="number"],
+            .form-row input[type="datetime-local"] {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -105,79 +130,94 @@
         <div class="input-section">
             <h2>Add New Task</h2>
             <form id="task-form">
-                <label for="task-name">Task Name:</label>
-                <input type="text" id="task-name" name="task-name" required><br><br>
+                <div class="form-row">
+                    <label for="task-name">Task Name:</label>
+                    <input type="text" id="task-name" name="task-name" required>
+                </div>
 
-                <label>What outcome am I trying to achieve, and does this task move me meaningfully toward it?</label>
-                <select id="outcome" name="outcome" required>
-                    <option value=""></option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="outcome">What outcome am I trying to achieve, and does this task move me meaningfully toward it?</label>
+                    <select id="outcome" name="outcome" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
 
-                <label>What is the consequence of not doing this task now?</label>
-                <select id="consequence" name="consequence" required>
-                    <option value=""></option>
-                    <option value="3">High</option>
-                    <option value="2">Medium</option>
-                    <option value="1">Low</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="consequence">What is the consequence of not doing this task now?</label>
+                    <select id="consequence" name="consequence" required>
+                        <option value="3">High</option>
+                        <option value="2">Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                </div>
 
-                <label>Is this the most valuable use of my time compared to other options?</label>
-                <select id="valuable" name="valuable" required>
-                    <option value=""></option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="valuable">Is this the most valuable use of my time compared to other options?</label>
+                    <select id="valuable" name="valuable" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
 
-                <label>Am I the only person who can or should do this?</label>
-                <select id="only-person" name="only-person" required>
-                    <option value=""></option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="only-person">Am I the only person who can or should do this?</label>
+                    <select id="only-person" name="only-person" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
 
-                <label>Can this task be simplified, batched, or automated to reduce effort?</label>
-                <select id="simplified" name="simplified" required>
-                    <option value=""></option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="simplified">Can this task be simplified, batched, or automated to reduce effort?</label>
+                    <select id="simplified" name="simplified" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
 
-                 <label for="task-time">How long will this task take? (Minutes):</label>
-                <input type="number" id="task-time" name="task-time" required><br><br>
+                <div class="form-row">
+                    <label for="task-time">How long will this task take? (Minutes):</label>
+                    <input type="number" id="task-time" name="task-time" required>
+                </div>
 
-                <label for="best-time">What is the best time of day to complete it?</label>
-                <select id="best-time" name="best-time" required>
-                    <option value=""></option>
-                    <option value="Morning">Morning</option>
-                    <option value="Afternoon">Afternoon</option>
-                    <option value="Evening">Evening</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="best-time">What is the best time of day to complete it?</label>
+                    <select id="best-time" name="best-time" required>
+                        <option value="Morning">Morning</option>
+                        <option value="Afternoon">Afternoon</option>
+                        <option value="Evening">Evening</option>
+                    </select>
+                </div>
 
-                <label>Can this task be grouped with others?</label>
-                <select id="grouped" name="grouped" required>
-                    <option value=""></option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="grouped">Can this task be grouped with others?</label>
+                    <select id="grouped" name="grouped" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
 
-                <label>Does this task require deep focus?</label>
-                <select id="deep-focus" name="deep-focus" required>
-                    <option value=""></option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="deep-focus">Does this task require deep focus?</label>
+                    <select id="deep-focus" name="deep-focus" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
 
-                <label>Would setting a deadline help?</label>
-                <select id="deadline-help" name="deadline-help" required>
-                    <option value=""></option>
-                    <option value="1">Yes</option>
-                    <option value="0">No</option>
-                </select><br><br>
+                <div class="form-row">
+                    <label for="deadline-help">Would setting a deadline help?</label>
+                    <select id="deadline-help" name="deadline-help" required>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
 
-                <label for="due-date">Due Date & Time:</label>
-                <input type="datetime-local" id="due-date" name="due-date" required><br><br>
+                <div class="form-row">
+                    <label for="due-date">Due Date & Time:</label>
+                    <input type="datetime-local" id="due-date" name="due-date" required>
+                </div>
 
                 <button type="submit">Add Task</button>
             </form>
