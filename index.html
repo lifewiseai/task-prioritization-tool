@@ -20,6 +20,14 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
+        .introduction {
+            grid-column: 1 / 3;
+            padding: 10px 20px;
+            text-align: left;
+            font-style: italic;
+            color: #555;
+        }
+
         .instructions {
             grid-column: 1 / 3; /* Span both columns */
             padding: 20px;
@@ -96,6 +104,7 @@
                 grid-template-columns: 1fr; /* Single column on smaller screens */
             }
 
+            .introduction,
             .instructions {
                 grid-column: 1; /* Occupy the first column */
                 text-align: center; /* Center the text */
@@ -131,6 +140,11 @@
 </head>
 <body>
     <div class="container">
+        <div class="introduction">
+            This tool helps you prioritize tasks based on their importance, urgency, and alignment with your goals.
+            It ensures that you focus on high-impact work while managing your time effectively. This tool helps you
+            focus on what matters most, avoid distractions, and improve productivity.
+        </div>
         <div class="instructions">
             <h1>Task Prioritization & Scheduling Tool</h1>
             <p>Enter your tasks, answer the prioritization questions, and set due dates to create a prioritized schedule.</p>
